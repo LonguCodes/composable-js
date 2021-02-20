@@ -1,15 +1,16 @@
 {
   "name": "composable-js",
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "Allows referencing overridden properties of classes using decorators regardless of order",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["composition","decorators"],
+  "author": "LonguCodes (Maciej L)",
+  "license": "GNU AGPLv3",
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.31",
