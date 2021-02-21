@@ -8,7 +8,10 @@
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
-  "keywords": ["composition","decorators"],
+  "keywords": [
+    "composition",
+    "decorators"
+  ],
   "author": "LonguCodes (Maciej L)",
   "license": "GNU AGPLv3",
   "devDependencies": {
