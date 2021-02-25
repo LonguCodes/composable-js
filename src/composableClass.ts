@@ -21,7 +21,7 @@ export class ComposableClass extends Composable<Constructor> {
         )
     }
 
-    static get(constructor: Constructor) {
+    static get(constructor: Constructor): ComposableClass {
         if (Reflect.hasMetadata(this.composeMetadataKey, constructor.prototype, 'constructor')) {
             const key = Reflect.getMetadata(this.composeMetadataKey, constructor.prototype, 'constructor') as string
             return this._registry[key];

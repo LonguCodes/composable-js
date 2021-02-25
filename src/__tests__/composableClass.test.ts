@@ -51,7 +51,7 @@ describe('Composable class', () => {
         it('Should override constructor', () => {
             const composable = ComposableClass.get(Base);
             const composed = composable.chain(overrideDecorator).composed;
-            const composedInstance = new composed()
+            const composedInstance = new composed() as Base & { b: number }
             expect(composedInstance).toBeInstanceOf(Base);
             expect(composedInstance).toHaveProperty('b')
             expect(composedInstance.b).toEqual(1)
