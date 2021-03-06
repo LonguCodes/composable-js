@@ -14,6 +14,7 @@ describe('Composable function', () => {
         let instance: Base;
 
         beforeEach(() => {
+
             instance = new Base();
         })
 
@@ -72,6 +73,22 @@ describe('Composable function', () => {
             expect(instance.foo).toBeCalledTimes(1);
             expect(instance.foo).toBeCalledWith(1, 2, 3, 1)
         })
+
+        it('Should persist call context', () => {
+            class Example {
+                foo(){
+
+                    return this;
+                }
+            }
+            const instance = new Example();
+            const result = instance.foo()
+            const composable = ComposableFunction.get(instance.foo).setDefaultContext(instance);
+            const composed = composable.chain(overrideDecorator).setDefaultContext(instance).composed
+            const composedResult = composed()
+            expect(composedResult).toEqual(result)
+        })
+
     })
 
     describe('Decorator override', () => {
@@ -93,5 +110,4 @@ describe('Composable function', () => {
             expect(fn).toBeCalledWith(1, 2, 3, 1)
         })
     })
-
 })
