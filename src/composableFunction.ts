@@ -43,10 +43,10 @@ export class ComposableFunction extends Composable<Function> {
     }
 
     static decorator(fn: ComposableTransformation<Function>) {
-        return (    target: any,
-                    propertyKey: string,
-                    descriptor: PropertyDescriptor) => {
-            descriptor.value = this.get(descriptor.value as Function)?.chain(fn).execute
+        return (target: any,
+                propertyKey: string,
+                descriptor: PropertyDescriptor) => {
+            descriptor.value = this.get(descriptor.value as Function)?.chain(fn).execute.bind(target)
         }
     }
 }
