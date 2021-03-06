@@ -7,6 +7,7 @@ import {Composable, ComposableStatic} from "./composable";
 @staticImplements<ComposableStatic<Function>>()
 export class ComposableFunction extends Composable<Function> {
 
+    private _context: any;
 
     constructor(fn: Function) {
         super(fn)
@@ -38,7 +39,15 @@ export class ComposableFunction extends Composable<Function> {
         return composableFunction;
     }
 
+    setDefaultContext(context: any) {
+        if (!this._context)
+            this._context = context;
+        return this;
+    }
+
     get composed() {
+        if (this._context)
+            return this._composable.bind(this._context)
         return this._composable;
     }
 
@@ -46,7 +55,7 @@ export class ComposableFunction extends Composable<Function> {
         return (target: any,
                 propertyKey: string,
                 descriptor: PropertyDescriptor) => {
-            descriptor.value = this.get(descriptor.value as Function)?.chain(fn).execute.bind(target)
+            descriptor.value = this.get(descriptor.value as Function)?.setDefaultContext(target).chain(fn).execute
         }
     }
 }
