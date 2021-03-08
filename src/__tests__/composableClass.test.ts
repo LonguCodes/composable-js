@@ -1,5 +1,6 @@
 import {Constructor} from "../types";
 import {ComposableClass} from "../composableClass";
+import {ComposableFunction} from "../composableFunction";
 
 describe('Composable class', () => {
 
@@ -56,6 +57,8 @@ describe('Composable class', () => {
             expect(composedInstance).toHaveProperty('b')
             expect(composedInstance.b).toEqual(1)
         })
+
+
     })
 
     describe('Decorator override', () => {
@@ -71,9 +74,45 @@ describe('Composable class', () => {
             }
 
             const composedInstance: Overridden = new Base() as any
-            expect(composedInstance).toBeInstanceOf(Base);
             expect(composedInstance).toHaveProperty('b')
             expect((composedInstance as any).b).toEqual(1)
+        })
+
+        it('Should migrate call context of methods in composable function', () => {
+            @ComposableClass.decorator(overrideDecorator)
+            class Base {
+                @ComposableFunction.decorator(x => (...args: []) => x(...args))
+                foo() {
+                    return this;
+                }
+            }
+
+            interface Overridden extends Base {
+                b: number
+            }
+
+            const composedInstance = new Base() as Overridden
+            expect(composedInstance.foo()).toEqual(composedInstance)
+        })
+
+        it('Should migrate call context of methods in composable function with multiple instances', () => {
+            @ComposableClass.decorator(overrideDecorator)
+            class Base {
+                @ComposableFunction.decorator(x => (...args: []) => x(...args))
+                foo() {
+                    return this;
+                }
+            }
+
+            interface Overridden extends Base {
+                b: number
+            }
+
+            const composedInstance = new Base() as Overridden
+            const composedInstance2 = new Base() as Overridden
+            composedInstance2.b = 5;
+            expect(composedInstance.foo()).toEqual(composedInstance)
+            expect(composedInstance2.foo()).toEqual(composedInstance2)
         })
     })
 

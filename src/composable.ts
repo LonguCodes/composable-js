@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 import {ComposableTransformation} from "./types";
+import {EventEmitter} from 'events';
 
 export abstract class Composable<T> {
 
@@ -8,9 +9,7 @@ export abstract class Composable<T> {
 
     protected static _registry: { [x: string]: Composable<any> } = {};
 
-
-    protected constructor(protected _composable: T) {
-
+    protected constructor() {
     }
 
     abstract chain(fn: (original: T, composable: T) => T): Composable<T>;

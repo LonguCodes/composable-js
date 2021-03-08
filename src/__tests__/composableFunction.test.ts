@@ -32,7 +32,7 @@ describe('Composable function', () => {
         })
 
         it('Should return composed method unchanged', () => {
-            const composed = ComposableFunction.get(instance.foo).composed;
+            const composed = ComposableFunction.get(instance.foo).composedChain;
             composed(1, 2, 3)
             expect(composed).toBeCalledTimes(1)
             expect(composed).toBeCalledWith(1, 2, 3)
@@ -77,14 +77,13 @@ describe('Composable function', () => {
         it('Should persist call context', () => {
             class Example {
                 foo(){
-
                     return this;
                 }
             }
             const instance = new Example();
             const result = instance.foo()
             const composable = ComposableFunction.get(instance.foo).setDefaultContext(instance);
-            const composed = composable.chain(overrideDecorator).setDefaultContext(instance).composed
+            const composed = composable.chain(overrideDecorator).composed
             const composedResult = composed()
             expect(composedResult).toEqual(result)
         })

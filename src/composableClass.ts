@@ -9,22 +9,33 @@ type ComposableInternalClass = Constructor & { _construct: Constructor }
 @staticImplements<ComposableStatic<Constructor>>()
 export class ComposableClass extends Composable<Constructor> {
 
-    private constructor(constructor: Constructor) {
-        super(
-            class Composable {
-                static _construct: Constructor = constructor
+    private _composed: Constructor;
+    private _callback: Function | undefined = undefined
 
-                constructor() {
-                    return new (this.constructor as ComposableInternalClass)._construct();
-                }
+    public set callback(callback: Function) {
+        this._callback = callback;
+    }
+
+    private constructor(constructor: Constructor) {
+        super()
+        const thisInstance = this;
+
+        this._composed = class Composable {
+            static _construct: Constructor = constructor
+
+            constructor() {
+                const composedInstance = new (this.constructor as ComposableInternalClass)._construct();
+                if (thisInstance._callback)
+                    return thisInstance._callback(composedInstance)
+                return composedInstance
             }
-        )
+        }
     }
 
     static get(constructor: Constructor): ComposableClass {
         if (Reflect.hasMetadata(this.composeMetadataKey, constructor.prototype, 'constructor')) {
             const key = Reflect.getMetadata(this.composeMetadataKey, constructor.prototype, 'constructor') as string
-            return this._registry[key];
+            return this._registry[key] as ComposableClass;
         }
         const composableClass = new ComposableClass(constructor)
         const key = v4();
@@ -34,16 +45,18 @@ export class ComposableClass extends Composable<Constructor> {
     }
 
     chain(fn: ComposableTransformation<Constructor>): ComposableClass {
-        (this._composable as ComposableInternalClass)._construct = fn(this.composed, this._composable);
+        (this._composed as ComposableInternalClass)._construct = fn((this._composed as ComposableInternalClass)._construct, this._composed);
         return this;
     }
 
     get composed(): Constructor {
-        return (this._composable as ComposableInternalClass)._construct;
+        return this._composed;
     }
 
     static decorator(fn: ComposableTransformation<Constructor>) {
-        return (cls: Constructor) => this.get(cls).chain(fn).composed
+        return <T>(cls: Constructor<T>) => {
+            return this.get(cls).chain(fn).composed as Constructor<T>
+        };
     }
 
 }
