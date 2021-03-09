@@ -58,6 +58,21 @@ describe('Composable class', () => {
             expect(composedInstance.b).toEqual(1)
         })
 
+        it('Should pass arguments to underlying constructor ', () => {
+            const mockFn = jest.fn()
+
+            class Example {
+                constructor(...args: any[]) {
+                    mockFn(...args)
+                }
+            }
+
+            const composable = ComposableClass.get(Example);
+            const composed = composable.chain(overrideDecorator).composed;
+            new composed(1, 2, 3)
+            expect(mockFn).toBeCalledTimes(1)
+            expect(mockFn).toBeCalledWith(1, 2, 3)
+        })
 
     })
 

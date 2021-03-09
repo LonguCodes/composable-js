@@ -23,8 +23,8 @@ export class ComposableClass extends Composable<Constructor> {
         this._composed = class Composable {
             static _construct: Constructor = constructor
 
-            constructor() {
-                const composedInstance = new (this.constructor as ComposableInternalClass)._construct();
+            constructor(...args: any[]) {
+                const composedInstance = new (this.constructor as ComposableInternalClass)._construct(...args);
                 if (thisInstance._callback)
                     return thisInstance._callback(composedInstance)
                 return composedInstance
