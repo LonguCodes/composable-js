@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-
     "target": "es6",
     "module": "commonjs",
     "declaration": true,
@@ -9,5 +8,13 @@
     "removeComments": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true
-  }
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/__tests__",
+    "dist"
+  ]
 }

@@ -2,4 +2,4 @@
 src
 jest.config.js
 tsconfig.json
-src/__tests__
+.idea
