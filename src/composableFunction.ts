@@ -54,20 +54,24 @@ export class ComposableFunction extends Composable<Function> {
         return this;
     }
 
-    private composeFromChain(context?:any){
+    private composeFromChain(context?: any) {
         return this._functionChain.reduce((curr, x) => x(this.bindToContext(curr, context), this.composed), this._composedBase);
     }
 
-    public get composedChain(){
+    public get composedChain() {
         return this.composeFromChain()
     }
 
     get composed(): Function {
-        if(Reflect.hasMetadata(ComposableFunction.composeMetadataKey, this._execute))
+        if (Reflect.hasMetadata(ComposableFunction.composeMetadataKey, this._execute))
             return this._execute
         this._execute = this._execute.bind(this)
         Reflect.defineMetadata(ComposableFunction.composeMetadataKey, this.key, this._execute)
         return this._execute
+    }
+
+    get base(): Function {
+        return this._composedBase;
     }
 
     private rebindInstance(instance: Object) {
@@ -86,7 +90,7 @@ export class ComposableFunction extends Composable<Function> {
             if (!Reflect.hasMetadata(ComposableFunction.composeMetadataKey, descriptor.value))
                 continue;
             descriptor.value = this.composeFromChain(instance)
-            Object.defineProperty(instance,memberKey,descriptor);
+            Object.defineProperty(instance, memberKey, descriptor);
         }
         return instance
     }

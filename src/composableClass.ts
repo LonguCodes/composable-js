@@ -12,6 +12,8 @@ export class ComposableClass extends Composable<Constructor> {
     private _composed: Constructor;
     private _callback: Function | undefined = undefined
 
+    private _base :Constructor;
+
     public set callback(callback: Function) {
         this._callback = callback;
     }
@@ -19,7 +21,7 @@ export class ComposableClass extends Composable<Constructor> {
     private constructor(constructor: Constructor) {
         super()
         const thisInstance = this;
-
+        this._base = constructor;
         this._composed = class Composable {
             static _construct: Constructor = constructor
 
@@ -51,6 +53,10 @@ export class ComposableClass extends Composable<Constructor> {
 
     get composed(): Constructor {
         return this._composed;
+    }
+
+    get base(): Constructor {
+        return this._base;
     }
 
     static decorator(fn: ComposableTransformation<Constructor>) {

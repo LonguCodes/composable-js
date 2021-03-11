@@ -1,6 +1,5 @@
 import 'reflect-metadata'
 import {ComposableTransformation} from "./types";
-import {EventEmitter} from 'events';
 
 export abstract class Composable<T> {
 
@@ -16,6 +15,8 @@ export abstract class Composable<T> {
 
 
     abstract get composed(): T ;
+
+    abstract get base(): T;
 
 
 }
