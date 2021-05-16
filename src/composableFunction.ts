@@ -32,7 +32,6 @@ export class ComposableFunction extends Composable<Function> {
         if (Reflect.hasMetadata(this.composeMetadataKey, fn)) {
             const key: string = Reflect.getMetadata(this.composeMetadataKey, fn)
             return this._registry[key] as ComposableFunction
-
         }
         const key = v4();
         const composableFunction = new ComposableFunction(fn, key)
@@ -87,9 +86,12 @@ export class ComposableFunction extends Composable<Function> {
         for (const {key: memberKey, descriptor} of methods) {
             if (!descriptor || typeof descriptor.value !== 'function')
                 continue
+
+
             if (!Reflect.hasMetadata(ComposableFunction.composeMetadataKey, descriptor.value))
                 continue;
-            descriptor.value = this.composeFromChain(instance)
+
+            descriptor.value = ComposableFunction.get(descriptor.value).composeFromChain(instance)
             Object.defineProperty(instance, memberKey, descriptor);
         }
         return instance
