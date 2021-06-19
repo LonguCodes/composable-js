@@ -1,6 +1,6 @@
-import {Constructor} from "../types";
-import {ComposableClass} from "../composableClass";
-import {ComposableFunction} from "../composableFunction";
+import {Constructor} from "../src";
+import {ComposableClass} from "../src";
+import {ComposableFunction} from "../src";
 
 describe('Composable class', () => {
 

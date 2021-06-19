@@ -1,4 +1,4 @@
-import {ComposableFunction} from "../composableFunction";
+import {ComposableFunction} from "../src";
 
 describe('Composable function', () => {
 

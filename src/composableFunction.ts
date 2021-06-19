@@ -14,7 +14,7 @@ export class ComposableFunction extends Composable<Function> {
 
     private readonly _composedBase: Function;
 
-    constructor(fn: Function, private readonly key: string) {
+    constructor(fn: Function, public readonly id: string) {
         super()
         this._composedBase = fn;
     }
@@ -65,7 +65,7 @@ export class ComposableFunction extends Composable<Function> {
         if (Reflect.hasMetadata(ComposableFunction.composeMetadataKey, this._execute))
             return this._execute
         this._execute = this._execute.bind(this)
-        Reflect.defineMetadata(ComposableFunction.composeMetadataKey, this.key, this._execute)
+        Reflect.defineMetadata(ComposableFunction.composeMetadataKey, this.id, this._execute)
         return this._execute
     }
 

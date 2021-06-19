@@ -1,0 +1,43 @@
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+image: node:14.15
+
+
+before_script:
+  - PACKAGE_VERSION="$(grep '\"version\":' package.json | cut -d\" -f4)"
+  - npm i -g pnpm
+  - pnpm i --no-save --frozen-lockfile
+  - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+
+
+stages:
+  - lint
+  - test
+  - publish
+
+lint:
+  stage: lint
+  script:
+    - pnpm lint:check
+
+test:
+  stage: test
+  script:
+    - pnpm test
+  artifacts:
+    reports:
+      junit: junit.xml
+
+publish:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: manual
+  stage: publish
+  script:
+    - pnpm build
+    - pnpm publish --no-git-checks

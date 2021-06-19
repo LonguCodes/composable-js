@@ -18,7 +18,7 @@ export class ComposableClass extends Composable<Constructor> {
         this._callback = callback;
     }
 
-    private constructor(constructor: Constructor) {
+    private constructor(constructor: Constructor, public readonly id:string) {
         super()
         const thisInstance = this;
         this._base = constructor;
@@ -39,8 +39,8 @@ export class ComposableClass extends Composable<Constructor> {
             const key = Reflect.getMetadata(this.composeMetadataKey, constructor.prototype, 'constructor') as string
             return this._registry[key] as ComposableClass;
         }
-        const composableClass = new ComposableClass(constructor)
         const key = v4();
+        const composableClass = new ComposableClass(constructor, key)
         this._registry[key] = composableClass;
         Reflect.defineMetadata(this.composeMetadataKey, key, constructor.prototype, 'constructor')
         Reflect.defineMetadata(this.composeMetadataKey, key, composableClass.composed.prototype, 'constructor')
